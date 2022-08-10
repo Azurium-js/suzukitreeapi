@@ -15,7 +15,7 @@ router.route('/fetchStudent').post(Auth.authenticateToken, async function (req, 
 
         return res.json(student);
     } catch (err) {
-        res.status(500).send({ message: "Something went wrong while trying to fetch your students", status: "error" });
+        res.status(500).send({ message: "Something went wrong while trying to fetch your student", status: "error" });
         console.log(err);
     }
 });

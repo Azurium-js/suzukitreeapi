@@ -11,7 +11,7 @@ const Misc = new miscController();
 router.route('/signup').post(Misc.limiter, async function (req, res) {
     try {
         if (!req.body.name || !req.body.email || !req.body.password || !req.body.phoneNumber) return res.status(406).send({ message: "The name, email, password, or phone number field are empty", status: "error" });
-        let user = await Users.findOne({ email: req.body.email });
+        let user = await Users.findOne({ email: req.body.email.toLowerCase() });
         if (user) return res.status(400).send({ message: "The email used to register is already used by another account", status: "error" });
 
         user = await new Users({
@@ -23,7 +23,8 @@ router.route('/signup').post(Misc.limiter, async function (req, res) {
 
         const token = await new Tokens({
             userId: user._id,
-            token: crypto.randomBytes(64).toString("hex")
+            token: crypto.randomBytes(64).toString("hex"),
+            usage: "verification"
         }).save();
 
         const sent = await Misc.sendEmail(req.body.email, "Verify Now!", `<a href="http://localhost:3000/verify-user/${token.token}">Verify</a>`);

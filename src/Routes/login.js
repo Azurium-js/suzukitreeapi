@@ -14,7 +14,7 @@ router.route('/login').post(Misc.limiter, async function (req, res) {
     try {
         if (!req.body.email || !req.body.password) return res.status(406).send({ message: "Email field or password field is empty", status: "error" });
         const user = await Users.findOne({
-            email: req.body.email,
+            email: req.body.email.toLowerCase(),
             deleted: false
         });
 

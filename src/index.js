@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const config = require('../config.json');
 
 const app = express();
-const PORT = 5000;
+const PORT = 8000;
 
 app.set('trust proxy', 1);
 

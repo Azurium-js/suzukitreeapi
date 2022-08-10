@@ -14,6 +14,10 @@ module.exports = model("tokens", new Schema({
         type: String,
         required: true
     },
+    usage: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now(),

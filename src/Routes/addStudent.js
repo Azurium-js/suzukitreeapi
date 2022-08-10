@@ -15,7 +15,7 @@ router.route('/addStudent').post(Auth.authenticateToken, async function (req, re
             student.students = [
                 ...student.students,
                 {
-                    name: req.body.name,
+                    name: req.body.name.slice(-1) === " " ? req.body.name.slice(0, -1) : req.body.name,
                     birthday: req.body.birthday,
                     email: req.body.email,
                     phoneNumber: req.body.phoneNumber,
@@ -31,7 +31,7 @@ router.route('/addStudent').post(Auth.authenticateToken, async function (req, re
             await new Students({
                 userId: req.body.userId,
                 students: [{
-                    name: req.body.name,
+                    name: req.body.name.slice(-1) === " " ? req.body.name.slice(0, -1) : req.body.name,
                     birthday: req.body.birthday,
                     email: req.body.email,
                     phoneNumber: req.body.phoneNumber,
