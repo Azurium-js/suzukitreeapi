@@ -10,8 +10,12 @@ module.exports = class Auth {
         return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' }); //10m
     }
 
-    generateRefreshToken = (user) => {
-        return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' }); //10m
+    generateRefreshToken = (user, type) => {
+        if (type === "week") {
+            return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' }); //10m
+        } else if (type === "day") {
+            return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); //10m
+        }
     }
 
     authenticateToken = (req, res, next) => {
