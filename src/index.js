@@ -5,6 +5,11 @@ const cors = require('cors');
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+<<<<<<< HEAD
+=======
+
+const config = require('../config.json');
+>>>>>>> 62f14c1447f41203be49167cc1cbd2253c293c43
 
 const app = express();
 const PORT = 8000;
@@ -32,7 +37,11 @@ mongoose.connect(process.env.MONGO_URI, {
     useUnifiedTopology: true
 }).then(console.log('Loaded database!'));
 
+<<<<<<< HEAD
 const whitelist = ["https://suzukitree.com:3000"];
+=======
+const whitelist = ["https://suzukitree.com"];
+>>>>>>> 62f14c1447f41203be49167cc1cbd2253c293c43
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
