@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require('../Controllers/authController');
 const Students = require('../models/Students');
 const History = require('../models/History');
+const Classes = require('../Models/Classes');
 
 const Auth = new authController();
 
@@ -10,30 +11,37 @@ router.route('/removeLatestHistory').post(Auth.authenticateToken, async function
     try {
         if (!req.body.userId) return res.status(406).send({ message: "There is no user/teacher id", status: "error" });
         const students = await Students.findOne({ userId: req.body.userId });
+        let student;
 
         if (!req.body.studentId) return res.status(406).send({ message: "There is no student id", status: "error" });
-        students.students.filter(student => student._id == req.body.studentId)[0].history = [
+        if (!req.body.type) return res.status(406).send({ message: "There is no type of class provided", status: "error" });
+        if (req.body.type === "single" || req.body.type === "weekly") {
+            student = students.students.filter(student => student._id == req.body.studentId)[0];
+        } else return res.status(406).send({ message: "The class type provided is invalid", status: "error" });
+
+        student.history = [
             { date: "recently deleted", history: "recently deleted" },
             {
-                date: students.students.filter(student => student._id == req.body.studentId)[0].history[1].date,
-                history: students.students.filter(student => student._id == req.body.studentId)[0].history[1].history
+                date: student.history[1].date,
+                history: student.history[1].history
             },
             {
-                date: students.students.filter(student => student._id == req.body.studentId)[0].history[2].date,
-                history: students.students.filter(student => student._id == req.body.studentId)[0].history[2].history
+                date: student.history[2].date,
+                history: student.history[2].history
             },
             {
-                date: students.students.filter(student => student._id == req.body.studentId)[0].history[3].date,
-                history: students.students.filter(student => student._id == req.body.studentId)[0].history[3].history
+                date: student.history[3].date,
+                history: student.history[3].history
             }
         ];
-        students.students.filter(student => student._id == req.body.studentId)[0].credit++;
-        await students.save();
+        student.credit++;
+        await Classes.updateMany({ userId: req.body.userId, studentId: req.body.studentId, deleted: false }, { history: student.history });
+        await students.save()
 
         await new History({
             userId: req.body.userId,
             studentId: req.body.studentId,
-            lessons: students.students.filter(student => student._id == req.body.studentId)[0].credit,
+            lessons: student.credit,
             lessonTransaction: "+1",
             transaction: "Added lesson",
             type: "lessons",

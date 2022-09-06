@@ -4,8 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const fs = require('fs');
 const cookieParser = require('cookie-parser');
-
-const config = require('../config.json');
+require('dotenv').config();
 
 const app = express();
 const PORT = 8000;
@@ -28,12 +27,12 @@ app.set('trust proxy', 1);
     }
 })();
 
-mongoose.connect(config.mongo_uri, {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(console.log('Loaded database!'));
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["https://suzukitree.com:3000"];
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin) {

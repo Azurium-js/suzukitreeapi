@@ -3,7 +3,7 @@ const router = express.Router();
 const authController = require('../Controllers/authController');
 const Students = require('../models/Students');
 const Tuitions = require('../models/Tuitions');
-const History = require('../models/History');
+const Classes = require('../Models/Classes');
 
 const Auth = new authController();
 
@@ -17,6 +17,7 @@ router.route('/deleteStudent').post(Auth.authenticateToken, async function (req,
         students.students.filter(student => student._id == req.body.studentId)[0].lastDeleted = new Date();
         await students.save();
         await Tuitions.findOneAndUpdate({ userId: req.body.userId, studentId: req.body.studentId }, { deleted: true });
+        await Classes.updateMany({ userId: req.body.userId, studentId: req.body.studentId }, { deleted: true });
 
         return res.json({ message: "Successfully deleted that student", status: "success" });
     } catch (err) {

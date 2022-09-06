@@ -16,7 +16,7 @@ router.route('/signup').post(Misc.limiter, async function (req, res) {
 
         user = await new Users({
             name: req.body.name,
-            email: req.body.email,
+            email: req.body.email.toLowerCase(),
             password: await bcrypt.hash(req.body.password, 10),
             phoneNumber: req.body.phoneNumber
         }).save();
